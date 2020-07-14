@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Banking.DataAccess.Interfaces
 {
@@ -16,6 +15,5 @@ namespace Banking.DataAccess.Interfaces
         T Get(Guid id);
 
         IList<T> GetAll();
-        Task SingleOrDefaultAsync(Func<object, bool> p);
     }
 }
