@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Banking.DataAccess.EntityFramework;
+using Banking.DataAccess.EntityFramework.EFImplementaions;
+using Banking.DataAccess.Interfaces;
+using Banking.Domain;
 using Banking.Domain.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -61,6 +64,13 @@ namespace Banking.WebAPI
             services.AddDbContext<BankingContext>(options =>
                options.UseSqlServer(
                    Configuration.GetConnectionString("Default")));
+
+            services.AddScoped<IUnitOfWork, EFUnitOfWork>();
+            services.AddScoped<IRepository<BankAccount>, BankAccountRepository>();
+            services.AddScoped<IRepository<BankCard>, BankCardRepository>();
+            services.AddScoped<IRepository<User>, UserRepository>();
+            services.AddScoped<IRepository<Service>, ServiceRepository>();
+            services.AddScoped<IRepository<Domain.ServiceProvider>, ServiceProviderRepository>();
             services.AddControllers();
         }
 
