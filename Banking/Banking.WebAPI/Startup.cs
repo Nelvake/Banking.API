@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Banking.DataAccess.EntityFramework;
+using Banking.Domain.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Banking.WebAPI
 {
@@ -28,6 +33,31 @@ namespace Banking.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+               .AddJwtBearer(options =>
+               {
+                   options.RequireHttpsMetadata = false;
+                   options.SaveToken = true;
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = true,
+                       ValidateAudience = true,
+                       ValidateLifetime = false,
+                       ValidateIssuerSigningKey = true,
+                       ValidIssuer = appSettingsSection.Get<AppSettingsOptions>().Issuer,
+                       ValidAudience = appSettingsSection.Get<AppSettingsOptions>().Audience,
+                       IssuerSigningKey =
+                           new SymmetricSecurityKey(
+                               Encoding.ASCII.GetBytes(appSettingsSection.Get<AppSettingsOptions>().Secret))
+                   };
+               });
+
             services.AddDbContext<BankingContext>(options =>
                options.UseSqlServer(
                    Configuration.GetConnectionString("Default")));
@@ -46,6 +76,7 @@ namespace Banking.WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
