@@ -33,20 +33,28 @@ namespace Banking.Services
 
         public ClaimsIdentity SignUp(string email, string password)
         {
-            var existingUser = _context.Users.GetAll().Where(x => x.Email == email);
-            if (existingUser != null) return null;
-
-            var newUser = new User
+            try
             {
-                Email = email,
-                Password = HashPassword(password),
-            };
+                var existingUser = _context.Users.GetAll().Where(x => x.Email == email);
+                if (existingUser != null) return null;
 
-            _context.Users.Add(newUser);
-            _context.Save();
+                var newUser = new User
+                {
+                    Email = email,
+                    Password = HashPassword(password),
+                };
 
-            return new ClaimsIdentity(CreateClaims(email, newUser.Id),
-                JwtBearerDefaults.AuthenticationScheme);
+                _context.Users.Add(newUser);
+                _context.Save();
+
+                return new ClaimsIdentity(CreateClaims(email, newUser.Id),
+                    JwtBearerDefaults.AuthenticationScheme);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
         }
 
         public ClaimsIdentity SignIn(User user)
@@ -60,9 +68,17 @@ namespace Banking.Services
 
         public User Authenticate(string email, string password)
         {
-            var user = _context.Users.GetAll().SingleOrDefault(x => x.Email.ToLower() == email);
+            try
+            {
+                var user = _context.Users.GetAll().SingleOrDefault(x => x.Email.ToLower() == email);
 
-            return user == null || user.Password == null || !Verify(password, user.Password) ? null : user;
+                return user == null || user.Password == null || !Verify(password, user.Password) ? null : user;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
         }
 
     }
