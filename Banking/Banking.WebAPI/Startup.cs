@@ -8,6 +8,8 @@ using Banking.DataAccess.EntityFramework.EFImplementaions;
 using Banking.DataAccess.Interfaces;
 using Banking.Domain;
 using Banking.Domain.Options;
+using Banking.Services;
+using Banking.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -71,6 +73,7 @@ namespace Banking.WebAPI
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IRepository<Service>, ServiceRepository>();
             services.AddScoped<IRepository<Domain.ServiceProvider>, ServiceProviderRepository>();
+            services.AddTransient<IAuthManager, AuthManager>();
             services.AddControllers();
         }
 

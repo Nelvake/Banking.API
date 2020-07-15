@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Banking.DataAccess\Banking.DataAccess.csproj" />
+    <ProjectReference Include="..\Banking.Services\Banking.Services.csproj" />
   </ItemGroup>
 
 
