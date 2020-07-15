@@ -36,8 +36,8 @@ namespace Banking.Services
         {
             try
             {
-                var existingUser = _context.Users.GetAll().Where(x => x.Email == email);
-                if (existingUser != null) return null;
+                var existingUser = _context.Users.GetAll().FirstOrDefault(x => x.Email == email);
+                if (existingUser != null || existingUser.IsBlocked) return null;
 
                 var newUser = new User
                 {
