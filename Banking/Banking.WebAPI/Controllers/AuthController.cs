@@ -29,7 +29,7 @@ namespace Banking.WebAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("Authorize")]
+        [HttpPost("SignIn")]
         public IActionResult Authorize(AuthDTO authDto)
         {
             if (!ModelState.IsValid)
@@ -59,5 +59,25 @@ namespace Banking.WebAPI.Controllers
             return Ok(new { token });
         }
 
+        [AllowAnonymous]
+        [HttpPost("SignUp")]
+        public IActionResult SignUp(AuthDTO authDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning(HttpStatusCode.BadRequest.ToString());
+                return BadRequest(HttpStatusCode.BadRequest);
+            }
+
+            var claimsIdentity = _authManager.SignUp(authDto.Email.ToLower(), authDto.Password);
+
+            if (claimsIdentity == null)
+            {
+                _logger.LogWarning(HttpStatusCode.BadRequest.ToString());
+                return BadRequest(HttpStatusCode.BadRequest);
+            }
+
+            return Ok();
+        }
     }
 }
