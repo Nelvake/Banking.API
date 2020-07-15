@@ -39,6 +39,7 @@ namespace Banking.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettingsOptions>(appSettingsSection);
 
             services.AddAuthentication(options =>
             {
