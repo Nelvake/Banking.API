@@ -1,5 +1,6 @@
 ﻿using Banking.DataAccess.Interfaces;
 using Banking.Domain;
+using Banking.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,7 +12,7 @@ using static BCrypt.Net.BCrypt;
 
 namespace Banking.Services
 {
-    public class AuthManager
+    public class AuthManager : IAuthManager
     {
         private readonly IUnitOfWork _context;
         private readonly ILogger<AuthManager> _logger;
