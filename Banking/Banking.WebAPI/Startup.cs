@@ -73,7 +73,9 @@ namespace Banking.WebAPI
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IRepository<Service>, ServiceRepository>();
             services.AddScoped<IRepository<Domain.ServiceProvider>, ServiceProviderRepository>();
+
             services.AddTransient<IAuthManager, AuthManager>();
+            services.AddTransient<ITokenService, TokenService>();
             services.AddControllers();
         }
 
