@@ -7,5 +7,6 @@ namespace Banking.Services.Interfaces
     public interface IHelperService
     {
         string GenerateAccountNumber();
+        string GenerateCardNumber();
     }
 }

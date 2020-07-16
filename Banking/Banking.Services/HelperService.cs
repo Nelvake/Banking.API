@@ -26,5 +26,15 @@ namespace Banking.Services
 
             return _builder.ToString();
         }
+
+        public string GenerateCardNumber()
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                _builder.Append($"{_random.Next(10)}");
+            }
+
+            return _builder.ToString();
+        }
     }
 }
