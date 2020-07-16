@@ -1,6 +1,8 @@
 ﻿using Banking.DataAccess.Interfaces;
 using Banking.Domain;
+using Banking.DTOs;
 using Banking.Services.Interfaces;
+using Mapster;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,13 +24,15 @@ namespace Banking.Services
             _helperService = helperService;
         }
 
-        public BankCard CreateCard(Guid id, string cardHolder)
+        public CardDTO CreateCard(Guid id, string cardHolder)
         {
             try
             {
                 _context.BeginTransaction();
 
-                var userBankAccount = _context.BankAccounts.Get(id);
+                var userBankAccount = _context.BankAccounts.GetAll().FirstOrDefault(x => x.User.Id == id);
+
+                if (userBankAccount == null) return null;
 
                 var newBankCard = new BankCard
                 {
@@ -45,7 +49,7 @@ namespace Banking.Services
 
                 _context.Commit();
 
-                return newBankCard;
+                return newBankCard.Adapt<CardDTO>();
             }
             catch (Exception e)
             {
@@ -55,11 +59,24 @@ namespace Banking.Services
             }
         }
 
-        public ICollection<BankCard> GetCardsUser(Guid id)
+        public CardDTO GetCardById(Guid id)
         {
             try
             {
-               return _context.BankCards.GetAll().Where(x => x.BankAccount.User.Id == id).ToList();
+                return _context.BankCards.Get(id).Adapt<CardDTO>();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+        }
+
+        public ICollection<CardDTO> GetCardsUser(Guid id)
+        {
+            try
+            {
+                return _context.BankCards.GetAll().Where(x => x.BankAccount.User.Id == id).ToList().Adapt<List<CardDTO>>();
             }
             catch (Exception e)
             {
