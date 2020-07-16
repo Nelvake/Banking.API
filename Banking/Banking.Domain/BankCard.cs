@@ -10,6 +10,7 @@ namespace Banking.Domain
         public string CardHolder { get; set; }
         public int CVC { get; set; }
         public decimal Amount { get; set; }
+        public Guid BankAccountId { get; set; }
         public BankAccount BankAccount { get; set; }
     }
 }
