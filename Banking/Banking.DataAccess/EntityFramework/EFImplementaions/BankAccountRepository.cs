@@ -1,5 +1,6 @@
 ﻿using Banking.DataAccess.Interfaces;
 using Banking.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -66,12 +67,12 @@ namespace Banking.DataAccess.EntityFramework.EFImplementaions
 
         public BankAccount Get(Guid id)
         {
-            return _context.BankAccounts.FirstOrDefault(x => x.Id == id);
+            return _context.BankAccounts.Include(x => x.User).Include(x => x.BankCards).FirstOrDefault(x => x.Id == id);
         }
 
         public IList<BankAccount> GetAll()
         {
-            return _context.BankAccounts.ToList();
+            return _context.BankAccounts.Include(x => x.User).Include(x => x.BankCards).ToList();
         }
     }
 }
