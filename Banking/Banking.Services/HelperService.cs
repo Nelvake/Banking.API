@@ -36,5 +36,10 @@ namespace Banking.Services
 
             return _builder.ToString();
         }
+
+        public int GenerateCVC()
+        {
+            return _random.Next(1, 1000);
+        }
     }
 }

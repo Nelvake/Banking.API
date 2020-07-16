@@ -8,5 +8,6 @@ namespace Banking.Services.Interfaces
     {
         string GenerateAccountNumber();
         string GenerateCardNumber();
+        int GenerateCVC();
     }
 }
