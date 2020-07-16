@@ -67,12 +67,12 @@ namespace Banking.DataAccess.EntityFramework.EFImplementaions
 
         public BankCard Get(Guid id)
         {
-            return _context.BankCards.Include(x => x.BankAccount).FirstOrDefault(x => x.Id == id);
+            return _context.BankCards.Include(x => x.BankAccount).ThenInclude(x => x.User).FirstOrDefault(x => x.Id == id);
         }
 
         public IList<BankCard> GetAll()
         {
-            return _context.BankCards.Include(x => x.BankAccount).ToList();
+            return _context.BankCards.Include(x => x.BankAccount).ThenInclude(x => x.User).ToList();
         }
     }
 }
