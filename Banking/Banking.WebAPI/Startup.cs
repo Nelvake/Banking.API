@@ -77,6 +77,9 @@ namespace Banking.WebAPI
 
             services.AddTransient<IAuthManager, AuthManager>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IHelperService, HelperService>();
+            services.AddTransient<Random>();
+            services.AddTransient<StringBuilder>();
             services.AddControllers();
         }
 
