@@ -16,11 +16,13 @@ namespace Banking.Services
     {
         private readonly IUnitOfWork _context;
         private readonly ILogger<AuthManager> _logger;
+        private readonly IHelperService _helperService;
 
-        public AuthManager(IUnitOfWork context, ILogger<AuthManager> logger)
+        public AuthManager(IUnitOfWork context, ILogger<AuthManager> logger, IHelperService helperService)
         {
             _context = context;
             _logger = logger;
+            _helperService = helperService;
         }
 
         private List<Claim> CreateClaims(string email, Guid id)
@@ -36,7 +38,7 @@ namespace Banking.Services
         {
             try
             {
-                var existingUser = _context.Users.GetAll().Where(x => x.Email == email);
+                var existingUser = _context.Users.GetAll().FirstOrDefault(x => x.Email == email);
                 if (existingUser != null) return null;
 
                 var newUser = new User
@@ -45,7 +47,14 @@ namespace Banking.Services
                     Password = HashPassword(password),
                 };
 
+                var newBankAccount = new BankAccount
+                {
+                    AccountNumber = _helperService.GenerateAccountNumber(),
+                    UserId = newUser.Id
+                };
+
                 _context.Users.Add(newUser);
+                _context.BankAccounts.Add(newBankAccount);
                 _context.Save();
 
                 return new ClaimsIdentity(CreateClaims(email, newUser.Id),
