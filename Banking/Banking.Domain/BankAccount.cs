@@ -9,7 +9,7 @@ namespace Banking.Domain
     {
         public string AccountNumber { get; set; }
         public User User { get; set; }
-        public DateTime ValidPeriod { get; set; }
-        public List<BankCard> BankCards { get; set; }
+        public DateTime ValidPeriod { get; set; } = DateTime.Now.AddYears(5);
+        public List<BankCard> BankCards { get; set; } = new List<BankCard>();
     }
 }
