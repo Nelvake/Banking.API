@@ -23,6 +23,8 @@ namespace Banking.Services
         {
             try
             {
+                if (amount <= 0) return false;
+
                 var card = _context.BankCards.Get(cardId);
 
                 if (card == null) return false;
@@ -45,6 +47,7 @@ namespace Banking.Services
         {
             try
             {
+                if (amount <= 0) return false;
                 _context.BeginTransaction();
 
                 var myCard = _context.BankCards.Get(cardId);
@@ -77,6 +80,8 @@ namespace Banking.Services
         {
             try
             {
+                if (amount <= 0) return false;
+
                 var card = _context.BankCards.Get(cardId);
 
                 if (card == null || card.Amount < amount) return false;
