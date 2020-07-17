@@ -80,6 +80,7 @@ namespace Banking.WebAPI
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IHelperService, HelperService>();
             services.AddTransient<ICardService, CardService>();
+            services.AddTransient<ICardOperationService, CardOperationService>();
             services.AddTransient<Random>();
             services.AddTransient<StringBuilder>();
             services.AddControllers().AddNewtonsoftJson(options =>
