@@ -6,6 +6,8 @@ using Mapster;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace Banking.Services
@@ -72,6 +74,33 @@ namespace Banking.Services
                 throw;
             }
 
+        }
+
+        public ICollection<ProviderDTO> GetAllProviders()
+        {
+            try
+            {
+                return _context.ServiceProviders.GetAll().Adapt<List<ProviderDTO>>();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+        }
+
+        public ICollection<ProviderServiceDTO> GetAllProviderServices(Guid providerId)
+        {
+            try
+            {
+                var services = _context.Services.GetAll().Where(x => x.ServiceProviderId == providerId).ToList();
+                return services.Adapt<List<ProviderServiceDTO>>();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
         }
 
         public bool PayForService(PayServiceDTO payServiceDTO)

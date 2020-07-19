@@ -13,5 +13,9 @@ namespace Banking.Services.Interfaces
         ProviderServiceDTO CreateProviderService(ProviderServiceDTO providerServiceDTO);
 
         bool PayForService(PayServiceDTO payServiceDTO);
+
+        ICollection<ProviderServiceDTO> GetAllProviderServices(Guid providerId);
+
+        ICollection<ProviderDTO> GetAllProviders();
     }
 }
