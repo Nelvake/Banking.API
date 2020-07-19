@@ -5,12 +5,15 @@ using System.Net;
 using System.Threading.Tasks;
 using Banking.DTOs;
 using Banking.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Banking.WebAPI.Controllers
+namespace Banking.WebAPI.Controllers.API
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ProviderOperationController : ControllerWithUser
