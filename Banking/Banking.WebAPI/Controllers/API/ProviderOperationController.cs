@@ -46,5 +46,21 @@ namespace Banking.WebAPI.Controllers.API
 
             return Ok();
         }
+
+        [HttpGet]
+        public IActionResult GetAllProviders()
+        {
+            var providers = _providerService.GetAllProviders();
+
+            return Ok(providers);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetAllProviderServices(Guid id)
+        {
+            var providerServices = _providerService.GetAllProviderServices(id);
+
+            return Ok(providerServices);
+        }
     }
 }
