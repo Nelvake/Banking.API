@@ -10,7 +10,7 @@ namespace Banking.Services.Interfaces
     {
         ProviderDTO CreateProvider(ProviderDTO providerDTO);
 
-        bool CreateProviderService(ProviderServiceDTO providerServiceDTO);
+        ProviderServiceDTO CreateProviderService(ProviderServiceDTO providerServiceDTO);
 
         bool PayForService(PayServiceDTO payServiceDTO);
     }

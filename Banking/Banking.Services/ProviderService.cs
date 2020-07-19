@@ -43,16 +43,16 @@ namespace Banking.Services
             }
         }
 
-        public bool CreateProviderService(ProviderServiceDTO providerServiceDTO)
+        public ProviderServiceDTO CreateProviderService(ProviderServiceDTO providerServiceDTO)
         {
             try
             {
-                if (providerServiceDTO.Amount <= 0) return false;
+                if (providerServiceDTO.Amount <= 0) return null;
 
                 var provider = _context.ServiceProviders.Get(providerServiceDTO.ServiceProviderId);
                 var card = _context.BankCards.Get(providerServiceDTO.BankCardId);
 
-                if (provider == null || card == null) return false;
+                if (provider == null || card == null) return null;
 
                 var service = new Service
                 {
@@ -64,7 +64,7 @@ namespace Banking.Services
                 _context.Services.Add(service);
                 _context.Save();
 
-                return true;
+                return service.Adapt<ProviderServiceDTO>();
             }
             catch (Exception e)
             {
