@@ -17,9 +17,5 @@
     <ProjectReference Include="..\Banking.Services\Banking.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\Admin\" />
-  </ItemGroup>
-
 
 </Project>
