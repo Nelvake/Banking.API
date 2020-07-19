@@ -107,6 +107,7 @@ namespace Banking.Services
         {
             try
             {
+                _context.BeginTransaction();
                 var service = _context.Services.Get(payServiceDTO.ServiceId);
                 var card = _context.BankCards.Get(payServiceDTO.CardId);
 
@@ -115,14 +116,19 @@ namespace Banking.Services
                 if (card.Amount < service.Amount) return false;
 
                 card.Amount -= service.Amount;
+                service.BankCard.Amount += service.Amount;
 
                 _context.BankCards.Edit(card);
+                _context.BankCards.Edit(service.BankCard);
                 _context.Save();
+
+                _context.Commit();
 
                 return true;
             }
             catch (Exception e)
             {
+                _context.Rollback();
                 _logger.LogError(e.Message);
                 throw;
             }
