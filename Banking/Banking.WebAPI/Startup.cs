@@ -42,6 +42,8 @@ namespace Banking.WebAPI
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsOptions>(appSettingsSection);
 
+            services.AddCors();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -95,6 +97,12 @@ namespace Banking.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(x => x
+                .WithOrigins("https://localhost:5001") 
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseHttpsRedirection();
 
