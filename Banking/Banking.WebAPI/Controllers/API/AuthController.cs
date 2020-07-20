@@ -5,6 +5,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Banking.DTOs;
 using Banking.Services.Interfaces;
+using Banking.WebAPI.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +19,13 @@ namespace Banking.WebAPI.Controllers.API
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthManager _authManager;
-        private readonly ITokenService _tokenService;
+        private readonly IMediator _mediator;
         private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthManager authManager, ILogger<AuthController> logger, ITokenService tokenService)
+        public AuthController(IMediator mediator, ILogger<AuthController> logger)
         {
-            _authManager = authManager;
+            _mediator = mediator;
             _logger = logger;
-            _tokenService = tokenService;
         }
 
         [AllowAnonymous]
@@ -38,25 +38,10 @@ namespace Banking.WebAPI.Controllers.API
                 return BadRequest(HttpStatusCode.BadRequest);
             }
 
-            var user = _authManager.Authenticate(authDto.Email.ToLower(), authDto.Password);
+            var request = new AuthorizeRequest(authDto);
+            var response = _mediator.Send(request).Result;
 
-            if (user == null)
-            {
-                _logger.LogWarning(HttpStatusCode.NotFound.ToString());
-                return NotFound(HttpStatusCode.NotFound);
-            }
-
-            var claimsIdentity = _authManager.SignIn(user);
-
-            if (claimsIdentity == null)
-            {
-                _logger.LogWarning(HttpStatusCode.NotFound.ToString());
-                return Unauthorized(HttpStatusCode.NotFound);
-            }
-
-            var token = _tokenService.CreateAuthToken(claimsIdentity);
-
-            return Ok(new { token });
+            return Ok(new { response });
         }
 
         [AllowAnonymous]
@@ -69,15 +54,10 @@ namespace Banking.WebAPI.Controllers.API
                 return BadRequest(HttpStatusCode.BadRequest);
             }
 
-            var claimsIdentity = _authManager.SignUp(authDto.Email.ToLower(), authDto.Password);
+            var request = new RegisterRequest(authDto);
+            var response = _mediator.Send(request).Result;
 
-            if (claimsIdentity == null)
-            {
-                _logger.LogWarning(HttpStatusCode.BadRequest.ToString());
-                return BadRequest(HttpStatusCode.BadRequest);
-            }
-
-            return Ok();
+            return Ok(new { response });
         }
     }
 }
