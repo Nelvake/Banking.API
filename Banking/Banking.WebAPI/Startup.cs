@@ -10,6 +10,7 @@ using Banking.Domain;
 using Banking.Domain.Options;
 using Banking.Services;
 using Banking.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -88,6 +89,8 @@ namespace Banking.WebAPI
             services.AddTransient<StringBuilder>();
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            services.AddMediatR(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
